@@ -3,23 +3,29 @@
   "type": "library",
   "description": "PHP library to create, edit and delete handles at SURFsara",
   "keywords": ["handles"],
-  "homepage": "",
+  "homepage": "http://www.gravitydesign.nl",
   "license": "MIT",
   "authors": [
     {
       "name": "Wilfred Waltman",
       "email": "wilfred@gravitydesign.nl",
-      "homepage": "http://www.gravitydesign.nl",
+      "homepage": "http://www.gravitydesign.nl/wilfred",
       "role": "Developer"
     },
     {
       "name": "Martijn Bekebrede",
       "email": "Martijn.Bekebrede@ordina.nl",
-      "homepage": "",
       "role": "Developer"
     }
   ],
+  "minimum-stability": "dev",
   "require": {
-    "php": ">=5.6.0"
+    "php": ">=5.6.0",
+    "guzzlehttp/guzzle": "^6.2"
+  },
+  "autoload": {
+    "psr-0": {
+      "SURFsara": "src/"
+    }
   }
 }
