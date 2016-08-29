@@ -25,8 +25,7 @@ class Handles {
   protected $surfsaraApi;
   protected $surfsaraPrefix;
   protected $overwrite = 'true';
-
-
+  
   /**
    * Set the handle.
    */
