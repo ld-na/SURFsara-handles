@@ -4,7 +4,7 @@ namespace GravityDesignNL\SURFsara;
 
 use GuzzleHttp\Client;
 
-class Handles {
+class SURFsaraHandles {
 
   /**
    * Variables.
@@ -25,7 +25,7 @@ class Handles {
   protected $surfsaraApi;
   protected $surfsaraPrefix;
   protected $overwrite = 'true';
-  
+
   /**
    * Set the handle.
    */
@@ -60,10 +60,10 @@ class Handles {
       'json' => $json,
     ];
 
-    $surfsara_url = $this->getSurfsaraUrl();
+    $url = $this->getSurfsaraUrl();
     $client = new Client();
 
-    return $client->put($surfsara_url, $config);
+    return $client->put($url, $config);
   }
 
   /**
