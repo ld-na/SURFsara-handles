@@ -25,7 +25,7 @@
   },
   "autoload": {
     "psr-0": {
-      "SURFsara": "src/"
+      "GravityDesignNL\\SURFsara": "src"
     }
   }
 }
