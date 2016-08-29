@@ -1,5 +1,5 @@
 {
-  "name": "GravityDesignNL/SURFsara-handles",
+  "name": "gravity-design-nl/surfsara-handles",
   "type": "library",
   "description": "PHP library to create, edit and delete handles at SURFsara",
   "keywords": ["handles"],
