@@ -1,25 +1,14 @@
 <?php
 
-namespace GravityDesignNl\SURFsara;
+namespace GravityDesignNL\SURFsara;
 
 use GuzzleHttp\Client;
 
-class HandlesSurfsara {
-
-  protected $key;
-  protected $cert;
-  protected $handleName;
-  protected $handleUrl;
-  protected $surfsaraApi;
-  protected $surfsaraPrefix;
-  protected $overwrite;
-
+class Handles {
 
   /**
-   * Handles constructor.
+   * Variables.
    *
-   * @param array $config
-   *   The configuration settings from the client implementing this class.
    *   The configuration array must contain the following entries:
    *     [key] - The full path to the private-key file.
    *     [cert] - The full path to the certificate file.
@@ -29,17 +18,69 @@ class HandlesSurfsara {
    *     [surfsara-prefix] - The SURFsara handle api prefix.
    *     [overwrite] - 'true' of 'false', defaults to 'true'.
    */
-  public function __construct($config) {
+  protected $key;
+  protected $cert;
+  protected $handleName;
+  protected $handleUrl;
+  protected $surfsaraApi;
+  protected $surfsaraPrefix;
+  protected $overwrite = 'true';
 
-    $this->setKey($config['key']);
-    $this->setCert($config['cert']);
-    $this->setHandleName($config['handle-name']);
-    $this->setHandleUrl($config['handle-url']);
-    $this->setSurfsaraApi($config['surfsara-api']);
-    $this->setSurfsaraPrefix($config['surfsara-prefix']);
-    $this->setOverwrite($config['overwrite']);
 
+  /**
+   * Set the handle.
+   */
+  public function setHandle() {
+
+    $json = [
+      'values' => [[
+        'index' => 100,
+        'type' => 'HS_ADMIN',
+        'data' => [
+          'value' => [
+            'index' => 200,
+            'handle' => '0.NA/1000',
+            'permissions' => '011111110011',
+            'format' => 'admin'
+          ],
+          'format' => 'admin',
+        ]
+      ],[
+        'index' => 1,
+        'type' => 'URL',
+        'data' => $this->getHandleUrl(),
+      ]]
+    ];
+
+    $extra_headers = ['Authorization' => 'Handle clientCert="true"'];
+    $config = [
+      'headers' => $extra_headers,
+      'verify' => false,
+      'ssl_key' => $this->getKey(),
+      'cert' => $this->getCert(),
+      'json' => $json,
+    ];
+
+    $surfsara_url = $this->getSurfsaraUrl();
+    $client = new Client();
+
+    return $client->put($surfsara_url, $config);
   }
+
+  /**
+   * Compose and return the full SURFsara url.
+   *
+   * @return mixed|string
+   */
+  public function getSurfsaraUrl() {
+
+    $api = $this->getSurfsaraApi();
+    $prefix = $this->getSurfsaraPrefix();
+    $name = $this->getHandleName();
+    $overwrite = $this->getOverwrite();
+    return $api . '/' . $prefix . '/' . $name . '?overwrite=' . $overwrite;
+  }
+
 
   /**
    * @return mixed
@@ -138,65 +179,5 @@ class HandlesSurfsara {
   public function setOverwrite($overwrite) {
     $this->overwrite = $overwrite;
   }
-
-  /**
-   * Compose and return the full SURFsara url.
-   *
-   * @return mixed|string
-   */
-  public function getSurfsaraUrl() {
-
-    $api = $this->getSurfsaraApi();
-    $prefix = $this->getSurfsaraPrefix();
-    $name = $this->getHandleName();
-    $overwrite = $this->getOverwrite();
-    return $api . '/' . $prefix . '/' . $name . '?overwrite=' . $overwrite;
-  }
-
-  /**
-   * Set the handle.
-   *
-   * @param $uuid
-   */
-  public function setHandle($uuid) {
-
-    $json = [
-      'values' => [[
-        'index' => 100,
-        'type' => 'HS_ADMIN',
-        'data' => [
-          'value' => [
-            'index' => 200,
-            'handle' => '0.NA/1000',
-            'permissions' => '011111110011',
-            'format' => 'admin'
-          ],
-          'format' => 'admin',
-        ]
-      ],[
-        'index' => 1,
-        'type' => 'URL',
-        'data' => $this->getHandleUrl(),
-      ]]
-    ];
-
-    $extra_headers = ['Authorization' => 'Handle clientCert="true"'];
-    $config = [
-      'headers' => $extra_headers,
-      'verify' => false,
-      'ssl_key' => $this->getKey(),
-      'cert' => $this->getCert(),
-      'json' => $json,
-    ];
-
-    $surfsara_url = $this->getSurfsaraUrl();
-    $client = new Client();
-    $request = $client->put($surfsara_url, $config);
-
-
-    $debug = '';
-
-  }
-
 
 }
