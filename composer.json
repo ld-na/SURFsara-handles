@@ -11,6 +11,12 @@
       "email": "wilfred@gravitydesign.nl",
       "homepage": "http://www.gravitydesign.nl",
       "role": "Developer"
+    },
+    {
+      "name": "Martijn Bekebrede",
+      "email": "Martijn.Bekebrede@ordina.nl",
+      "homepage": "",
+      "role": "Developer"
     }
   ],
   "require": {
