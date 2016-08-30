@@ -25,45 +25,55 @@ class SURFsaraHandles {
   protected $surfsaraApi;
   protected $surfsaraPrefix;
   protected $overwrite = 'true';
+  protected $verify = false;
+  protected $headers = [];
 
   /**
    * Set the handle.
    */
   public function setHandle() {
 
-    $json = [
-      'values' => [[
-        'index' => 100,
-        'type' => 'HS_ADMIN',
-        'data' => [
-          'value' => [
-            'index' => 200,
-            'handle' => '0.NA/1000',
-            'permissions' => '011111110011',
-            'format' => 'admin'
+    if ($this->isValid()) {
+
+      $json = [
+        'values' => [
+          [
+            'index' => 100,
+            'type' => 'HS_ADMIN',
+            'data' => [
+              'value' => [
+                'index' => 200,
+                'handle' => '0.NA/' . $this->getSurfsaraPrefix(),
+                'permissions' => '011111110011',
+                'format' => 'admin'
+              ],
+              'format' => 'admin',
+            ]
           ],
-          'format' => 'admin',
+          [
+            'index' => 1,
+            'type' => 'URL',
+            'data' => $this->getHandleUrl(),
+          ]
         ]
-      ],[
-        'index' => 1,
-        'type' => 'URL',
-        'data' => $this->getHandleUrl(),
-      ]]
-    ];
+      ];
 
-    $extra_headers = ['Authorization' => 'Handle clientCert="true"'];
-    $config = [
-      'headers' => $extra_headers,
-      'verify' => false,
-      'ssl_key' => $this->getKey(),
-      'cert' => $this->getCert(),
-      'json' => $json,
-    ];
+      $config = [
+        'headers' => $this->getHeaders(),
+        'verify' => $this->isVerify(),
+        'ssl_key' => $this->getKey(),
+        'cert' => $this->getCert(),
+        'json' => $json,
+      ];
 
-    $url = $this->getSurfsaraUrl();
-    $client = new Client();
+      $url = $this->getSurfsaraUrl();
+      $client = new Client();
 
-    return $client->put($url, $config);
+      return $client->put($url, $config);
+    }
+
+    // Return FALSE if handle can't be set because of missing or invalid settings.
+    return FALSE;
   }
 
   /**
@@ -72,14 +82,36 @@ class SURFsaraHandles {
    * @return mixed|string
    */
   public function getSurfsaraUrl() {
-
     $api = $this->getSurfsaraApi();
     $prefix = $this->getSurfsaraPrefix();
     $name = $this->getHandleName();
-    $overwrite = $this->getOverwrite();
-    return $api . '/' . $prefix . '/' . $name . '?overwrite=' . $overwrite;
+
+    $url = $api . '/' . $prefix . '/' . $name;
+
+    if (!empty($this->getOverwrite()) && $this->isValidOverwrite()) {
+      $url = $url . '?overwrite=' . $this->getOverwrite();
+    }
+
+    return $url;
   }
 
+
+  /**
+   * Check if all input is available and valid.
+   *
+   * @return bool
+   *   Returns true when valid, false if not.
+   */
+  public function isValid() {
+    if (!$this->isValidKey() || !$this->isValidCert() || !$this->isValidHandleName() ||
+        !$this->isValidHandleUrl() || !$this->isValidSurfsaraApi() || !$this->isValidSurfsaraPrefix() ||
+        !$this->isValidOverwrite() || !$this->isValidVerify() || !$this->isValidHeaders()
+       ) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
 
   /**
    * @return mixed
@@ -93,6 +125,16 @@ class SURFsaraHandles {
    */
   public function setKey($key) {
     $this->key = $key;
+  }
+
+  /**
+   * Check if key is available and valid.
+   *
+   * @return bool
+   *   Returns true when valid, false if not.
+   */
+  private function isValidKey() {
+    return !empty($this->getKey());
   }
 
   /**
@@ -110,6 +152,16 @@ class SURFsaraHandles {
   }
 
   /**
+   * Check if cert is available and valid.
+   *
+   * @return bool
+   *   Returns true when valid, false if not.
+   */
+  private function isValidCert() {
+    return !empty($this->getCert());
+  }
+
+  /**
    * @return mixed
    */
   public function getHandleName() {
@@ -121,6 +173,16 @@ class SURFsaraHandles {
    */
   public function setHandleName($handleName) {
     $this->handleName = $handleName;
+  }
+
+  /**
+   * Check if handle name is available and valid.
+   *
+   * @return bool
+   *   Returns true when valid, false if not.
+   */
+  private function isValidHandleName() {
+    return !empty($this->getHandleName());
   }
 
   /**
@@ -138,6 +200,16 @@ class SURFsaraHandles {
   }
 
   /**
+   * Check if handle url is available and valid.
+   *
+   * @return bool
+   *   Returns true when valid, false if not.
+   */
+  private function isValidHandleUrl() {
+    return !empty($this->getHandleUrl());
+  }
+
+  /**
    * @return mixed
    */
   public function getSurfsaraApi() {
@@ -149,6 +221,16 @@ class SURFsaraHandles {
    */
   public function setSurfsaraApi($surfsaraApi) {
     $this->surfsaraApi = $surfsaraApi;
+  }
+
+  /**
+   * Check if SURFsara API url is available and valid.
+   *
+   * @return bool
+   *   Returns true when valid, false if not.
+   */
+  private function isValidSurfsaraApi() {
+    return !empty($this->getSurfsaraApi());
   }
 
   /**
@@ -166,6 +248,16 @@ class SURFsaraHandles {
   }
 
   /**
+   * Check if SURFsara prefix is available and valid.
+   *
+   * @return bool
+   *   Returns true when valid, false if not.
+   */
+  private function isValidSurfsaraPrefix() {
+    return !empty($this->getSurfsaraPrefix());
+  }
+
+  /**
    * @return mixed|string
    */
   public function getOverwrite() {
@@ -177,6 +269,68 @@ class SURFsaraHandles {
    */
   public function setOverwrite($overwrite) {
     $this->overwrite = $overwrite;
+  }
+
+  /**
+   * Check if overwrite is available and valid.
+   *
+   * @return bool
+   *   Returns true when valid, false if not.
+   */
+  private function isValidOverwrite() {
+    $valid_options = ['true', 'false'];
+    if (!empty($this->getOverwrite()) && !in_array($this->getOverwrite(), $valid_options)) {
+      return FALSE;
+    }
+    return TRUE;
+  }
+
+  /**
+   * @return boolean
+   */
+  public function isVerify() {
+    return $this->verify;
+  }
+
+  /**
+   * @param boolean $verify
+   */
+  public function setVerify($verify) {
+    $this->verify = $verify;
+  }
+
+  /**
+   * Check if verify is available and valid.
+   *
+   * @return bool
+   *   Returns true when valid, false if not.
+   */
+  private function isValidVerify() {
+    return (is_bool($this->isVerify()));
+  }
+
+  /**
+   * @return array
+   */
+  public function getHeaders() {
+    return $this->headers;
+  }
+
+  /**
+   * @param array $headers
+   */
+  public function setHeaders($headers) {
+    $this->headers = $headers;
+  }
+
+  /**
+   * Check if headers is available and valid.
+   *
+   * @return bool
+   *   Returns true when valid, false if not.
+   */
+  private function isValidHeaders() {
+    return (is_array($this->getHeaders()));
   }
 
 }
