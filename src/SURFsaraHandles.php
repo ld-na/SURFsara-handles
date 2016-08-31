@@ -108,9 +108,8 @@ class SURFsaraHandles {
           'json' => $json,
         ];
 
-        $url = $this->getSurfsaraUrl();
         try {
-          $result = $this->client->put($url, $config);
+          $result = $this->client->put($this->getSurfsaraUrl(), $config);
           $response['result'] = (in_array($result->getStatusCode(), [200, 201])) ? TRUE : FALSE;
           $response['code'] = $result->getStatusCode();
           $response['message'] = $result->getReasonPhrase();
@@ -171,7 +170,7 @@ class SURFsaraHandles {
    */
   private function getSurfsaraUrl() {
     $api = $this->getSurfsaraApi();
-    $prefix = $this->getSurfsaraPrefix();
+    $prefix = $this->getSurfsaraPrefixEnv();
     $name = $this->getHandleName();
     $url = $api . '/' . $prefix . '/' . $name;
     if (!empty($this->getOverwrite())) {
