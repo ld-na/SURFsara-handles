@@ -67,6 +67,17 @@ class SURFsaraHandles {
   }
 
   /**
+   * Delete the handle.
+   */
+  public function deleteHandle() {
+
+    $url = $this->getSurfsaraUrl();
+    $client = new Client();
+
+    return $client->delete($url);
+  }
+
+  /**
    * Compose and return the full SURFsara url.
    *
    * @return mixed|string
