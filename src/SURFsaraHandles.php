@@ -140,8 +140,17 @@ class SURFsaraHandles {
    */
   public function deleteHandle() {
 
+    $this->setOverwrite(NULL);
+
+    $config = [
+      'headers' => $this->getHeaders(),
+      'verify' => $this->isVerify(),
+      'ssl_key' => $this->getKey(),
+      'cert' => $this->getCert(),
+    ];
+
     try {
-      $result = $this->client->delete($this->getSurfsaraUrl());
+      $result = $this->client->delete($this->getSurfsaraUrl(), $config);
       $response['result'] = ($result->getStatusCode() == 200) ? TRUE : FALSE;
       $response['code'] = $result->getStatusCode();
       $response['message'] = $result->getReasonPhrase();
@@ -153,7 +162,8 @@ class SURFsaraHandles {
       $response['code'] = $exception->getCode();
       $response['message'] = $exception->getMessage();
     }
-
+    // Return response.
+    return $response;
   }
 
   /**
