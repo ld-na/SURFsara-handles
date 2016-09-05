@@ -208,6 +208,12 @@ class SURFsaraHandles {
     return $this->getSurfsaraPrefixOrg() . '/' . $this->getSurfsaraPrefixEnv();
   }
 
+  /**
+   * Get the base configuration settings needed for connecting to SURFsara.
+   *
+   * @return array $config
+   *   Basic configuration settings.
+   */
   private function getConfigBase() {
     $config = [
       'headers' => $this->getHeaders(),
@@ -218,8 +224,7 @@ class SURFsaraHandles {
 
     return $config;
   }
-
-
+  
   /**
    * Get the full path to the private-key file.
    *
