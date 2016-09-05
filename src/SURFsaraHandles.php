@@ -100,13 +100,8 @@ class SURFsaraHandles {
           ],
         ];
 
-        $config = [
-          'headers' => $this->getHeaders(),
-          'verify' => $this->isVerify(),
-          'ssl_key' => $this->getKey(),
-          'cert' => $this->getCert(),
-          'json' => $json,
-        ];
+        $config = $this->getConfigBase();
+        $config['json'] = $json;
 
         try {
           $result = $this->client->put($this->getSurfsaraUrl(), $config);
@@ -142,15 +137,8 @@ class SURFsaraHandles {
 
     $this->setOverwrite(NULL);
 
-    $config = [
-      'headers' => $this->getHeaders(),
-      'verify' => $this->isVerify(),
-      'ssl_key' => $this->getKey(),
-      'cert' => $this->getCert(),
-    ];
-
     try {
-      $result = $this->client->delete($this->getSurfsaraUrl(), $config);
+      $result = $this->client->delete($this->getSurfsaraUrl(), $this->getConfigBase());
       $response['result'] = ($result->getStatusCode() == 200) ? TRUE : FALSE;
       $response['code'] = $result->getStatusCode();
       $response['message'] = $result->getReasonPhrase();
@@ -219,6 +207,18 @@ class SURFsaraHandles {
   private function getSurfsaraPrefix() {
     return $this->getSurfsaraPrefixOrg() . '/' . $this->getSurfsaraPrefixEnv();
   }
+
+  private function getConfigBase() {
+    $config = [
+      'headers' => $this->getHeaders(),
+      'verify' => $this->isVerify(),
+      'ssl_key' => $this->getKey(),
+      'cert' => $this->getCert(),
+    ];
+
+    return $config;
+  }
+
 
   /**
    * Get the full path to the private-key file.
