@@ -1,7 +1,8 @@
 # SURFsara Handles
 
 ## Introduction ##
-PHP library to create, edit and delete handles.
+PHP library to create, edit and delete handles through the SURFsara 
+REST API.
 
 ## Installation ##
 Install the SURFsara Handles library using Composer.
@@ -21,34 +22,34 @@ $client = new SURFsaraHandles();
 ``` 
 
 ### Options ###
-The SURFsara Handles need some settings (required and optional) to make 
-it work properly.
+The SURFsara Handles class needs some settings (required and optional) 
+to make it work properly.
 
-#### Key (required (string)) ####
+#### Key (required) (string) ####
 The absolute path to the private-key file.
 ```
 $client->setKey('<path>'));
 ```
 
-#### Certificate (required (string)) ####
+#### Certificate (required) (string) ####
 The absolute path to the certificate file.
 ```
 $client->setCert('<path>'));
 ```
 
-#### Organisation code (required (string)) ####
+#### Organisation code (required) (string) ####
 The code SURFsara has given to your organisation.
 ```
 $client->setSurfsaraPrefixOrg('<code>'));
 ```
 
-#### Organisation code (required (string)) ####
+#### Organisation code (required) (string) ####
 The code for the SURFsara environment you will communicate with.
 ```
 $client->setSurfsaraPrefixEnv('<env>'));
 ```
 
-#### API Url (required (string)) ####
+#### API Url (required) (string) ####
 The url for the SURFsara API you will communicate with.
 ```
 $client->setSurfsaraPrefixEnv('<api>'));
@@ -80,3 +81,15 @@ Set headers if you need them. Headers are added in an array.
 $this->client->setHeaders(['Authorization' => 'Handle clientCert="true"']);
 ```
 
+### Handles ###
+When you added all the settings then ou can create or update a (new) handle:
+``` 
+$client->setHandle();
+```
+
+Or you can delete it:
+``` 
+$client->deleteHandle();
+```
+
+Happy handling!!!
