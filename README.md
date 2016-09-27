@@ -1,8 +1,10 @@
 # SURFsara Handles
 
 ## Introduction ##
-PHP library to create, edit and delete handles through the SURFsara 
-REST API.
+PHP library to create, edit and delete handles through the handle HTTP 
+JSON REST API running at SURFsara. More information about the API can be 
+found at  http://www.handle.net/tech_manual/HN_Tech_Manual_8.pdf 
+(chapter 14).
 
 ## Installation ##
 Install the SURFsara Handles library using Composer.
@@ -46,7 +48,7 @@ $client->setSurfsaraPrefixOrg('<code>'));
 #### Organisation code (required) (string) ####
 The code for the SURFsara environment you will communicate with.
 ```
-$client->setSurfsaraPrefixEnv('<env>'));
+$client->setSurfsaraPrefixOrg('<env>'));
 ```
 
 #### API Url (required) (string) ####
@@ -78,11 +80,23 @@ $client->setVerify(FALSE));
 #### Headers (optional (array)) ####
 Set headers if you need them. Headers are added in an array.
 ```
-$this->client->setHeaders(['Authorization' => 'Handle clientCert="true"']);
+$client->setHeaders(['Authorization' => 'Handle clientCert="true"']);
+```
+
+### Handle Name ###
+Set the handle name. For example a uuid.
+``` 
+$client->setHandleName('<name>');
+```
+
+### Handle Url ###
+Set the base handle url the PID redirects to. For example http://www.example.org/<uuid>.
+``` 
+$client->setHandleUrl('<url>');
 ```
 
 ### Handles ###
-When you added all the settings then ou can create or update a (new) handle:
+When you added all the settings then you can create or update a (new) handle:
 ``` 
 $client->setHandle();
 ```
